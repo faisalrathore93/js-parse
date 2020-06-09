@@ -57,6 +57,8 @@ fn main() {
     let mut headers: Vec<String> = Vec::with_capacity(0xff);
     let mut api_keys: Vec<String> = Vec::with_capacity(0xff);
 
+    let mut error = false;
+
     // iterate over content of directory
     for file in files {
         let file = file.unwrap();
@@ -70,7 +72,7 @@ fn main() {
 
         if verbosity {
             println!(
-                "{} Scanning {}...",
+                "{} scanning {}...",
                 "info:".bright_blue().bold(),
                 file.path().to_string_lossy()
             );
@@ -81,6 +83,7 @@ fn main() {
             Ok(content) => content,
             Err(err) => {
                 eprintln!("{} {}", "error:".bright_red().bold(), err);
+                error = true;
                 continue;
             }
         };
@@ -136,7 +139,7 @@ fn main() {
         }
     }
 
-    if verbosity {
+    if verbosity || error {
         println!();
     }
 
@@ -234,7 +237,7 @@ fn main() {
             Ok(_ok) => println!(
                 "{}: {} {}",
                 "info".bright_blue().bold(),
-                "Saved results in",
+                "saved results in",
                 output_file
             ),
             Err(err) => eprintln!("{} {}", "error:".bright_red().bold(), err),
